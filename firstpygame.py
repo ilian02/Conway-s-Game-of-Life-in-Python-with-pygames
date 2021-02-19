@@ -6,182 +6,279 @@ import math
 
 pygame.init()
 
-WIDTH = 900
-HEIGHT = 900
 
-NODESIZE = 25;
+ARRAYSIZE = 35
+NODESIZE = 25
+GRIDSIZE = 0
+
+WIDTH = ARRAYSIZE * NODESIZE
+HEIGHT = WIDTH
+
+ISCURVED = True
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
 
-WHITE=(255,255,255)
-GREY=(150, 150, 150)
+LiveColor = (255, 255, 255)
+DeadColor = (137, 137, 137)
+
 
 pygame.display.set_caption("Game of Life by Conway")
 
 
-ARRAYSIZE = 35
-
 def shouldItLive(row, col, table):
     neighbors = 0
 
-    if 0 < row < ARRAYSIZE - 1:
-        if 0 < col < ARRAYSIZE - 1:
-            if table[row - 1][col - 1] == 1:
-                neighbors += 1
-            if table[row + 1][col + 1] == 1:
-                neighbors += 1
-            if table[row - 1][col + 1] == 1:
-                neighbors += 1
-            if table[row + 1][col - 1] == 1:
-                neighbors += 1
-            if table[row - 1][col] == 1:
-                neighbors += 1
-            if table[row + 1][col] == 1:
-                neighbors += 1
-            if table[row][col - 1] == 1:
-                neighbors += 1
-            if table[row][col + 1] == 1:
-                neighbors += 1
-        elif col == 0:
-            if table[row - 1][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row + 1][col + 1] == 1:
-                neighbors += 1
-            if table[row - 1][col + 1] == 1:
-                neighbors += 1
-            if table[row + 1][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row - 1][col] == 1:
-                neighbors += 1
-            if table[row + 1][col] == 1:
-                neighbors += 1
-            if table[row][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row][col + 1] == 1:
-                neighbors += 1
-        elif col == ARRAYSIZE - 1:
-            if table[row - 1][col - 1] == 1:
-                neighbors += 1
-            if table[row + 1][0] == 1:
-                neighbors += 1
-            if table[row - 1][0] == 1:
-                neighbors += 1
-            if table[row + 1][col - 1] == 1:
-                neighbors += 1
-            if table[row - 1][col] == 1:
-                neighbors += 1
-            if table[row + 1][col] == 1:
-                neighbors += 1
-            if table[row][col - 1] == 1:
-                neighbors += 1
-            if table[row][0] == 1:
-                neighbors += 1
-    elif row == 0:
-        if 0 < col < ARRAYSIZE - 1:
-            if table[ARRAYSIZE - 1][col - 1] == 1:
-                neighbors += 1
-            if table[row + 1][col + 1] == 1:
-                neighbors += 1
-            if table[ARRAYSIZE - 1][col + 1] == 1:
-                neighbors += 1
-            if table[row + 1][col - 1] == 1:
-                neighbors += 1
-            if table[ARRAYSIZE - 1][col] == 1:
-                neighbors += 1
-            if table[row + 1][col] == 1:
-                neighbors += 1
-            if table[row][col - 1] == 1:
-                neighbors += 1
-            if table[row][col + 1] == 1:
-                neighbors += 1
-        elif col == 0:
-            if table[ARRAYSIZE - 1][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row + 1][col + 1] == 1:
-                neighbors += 1
-            if table[ARRAYSIZE - 1][col + 1] == 1:
-                neighbors += 1
-            if table[row + 1][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[ARRAYSIZE - 1][col] == 1:
-                neighbors += 1
-            if table[row + 1][col] == 1:
-                neighbors += 1
-            if table[row][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row][col + 1] == 1:
-                neighbors += 1
-        elif col == ARRAYSIZE - 1:
-            if table[ARRAYSIZE - 1][col - 1] == 1:
-                neighbors += 1
-            if table[row + 1][0] == 1:
-                neighbors += 1
-            if table[ARRAYSIZE - 1][0] == 1:
-                neighbors += 1
-            if table[row + 1][col - 1] == 1:
-                neighbors += 1
-            if table[ARRAYSIZE - 1][col] == 1:
-                neighbors += 1
-            if table[row + 1][col] == 1:
-                neighbors += 1
-            if table[row][col - 1] == 1:
-                neighbors += 1
-            if table[row][0] == 1:
-                neighbors += 1
-    elif row == ARRAYSIZE - 1:
-        if 0 < col < ARRAYSIZE - 1:
-            if table[row - 1][col - 1] == 1:
-                neighbors += 1
-            if table[0][col + 1] == 1:
-                neighbors += 1
-            if table[row - 1][col + 1] == 1:
-                neighbors += 1
-            if table[0][col - 1] == 1:
-                neighbors += 1
-            if table[row - 1][col] == 1:
-                neighbors += 1
-            if table[0][col] == 1:
-                neighbors += 1
-            if table[row][col - 1] == 1:
-                neighbors += 1
-            if table[row][col + 1] == 1:
-                neighbors += 1
-        elif col == 0:
-            if table[row - 1][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[0][col + 1] == 1:
-                neighbors += 1
-            if table[row - 1][col + 1] == 1:
-                neighbors += 1
-            if table[0][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row - 1][col] == 1:
-                neighbors += 1
-            if table[0][col] == 1:
-                neighbors += 1
-            if table[row][ARRAYSIZE - 1] == 1:
-                neighbors += 1
-            if table[row][col + 1] == 1:
-                neighbors += 1
-        elif col == ARRAYSIZE - 1:
-            if table[row - 1][col - 1] == 1:
-                neighbors += 1
-            if table[0][0] == 1:
-                neighbors += 1
-            if table[row - 1][0] == 1:
-                neighbors += 1
-            if table[0][col - 1] == 1:
-                neighbors += 1
-            if table[row - 1][col] == 1:
-                neighbors += 1
-            if table[0][col] == 1:
-                neighbors += 1
-            if table[row][col - 1] == 1:
-                neighbors += 1
-            if table[row][0] == 1:
-                neighbors += 1
-
+    if ISCURVED:
+        if 0 < row < ARRAYSIZE - 1:
+            if 0 < col < ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == 0:
+                if table[row - 1][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][0] == 1:
+                    neighbors += 1
+                if table[row - 1][0] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][0] == 1:
+                    neighbors += 1
+        elif row == 0:
+            if 0 < col < ARRAYSIZE - 1:
+                if table[ARRAYSIZE - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[ARRAYSIZE - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[ARRAYSIZE - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == 0:
+                if table[ARRAYSIZE - 1][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[ARRAYSIZE - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[ARRAYSIZE - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == ARRAYSIZE - 1:
+                if table[ARRAYSIZE - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][0] == 1:
+                    neighbors += 1
+                if table[ARRAYSIZE - 1][0] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[ARRAYSIZE - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][0] == 1:
+                    neighbors += 1
+        elif row == ARRAYSIZE - 1:
+            if 0 < col < ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[0][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[0][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[0][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == 0:
+                if table[row - 1][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[0][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[0][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[0][col] == 1:
+                    neighbors += 1
+                if table[row][ARRAYSIZE - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[0][0] == 1:
+                    neighbors += 1
+                if table[row - 1][0] == 1:
+                    neighbors += 1
+                if table[0][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[0][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][0] == 1:
+                    neighbors += 1
+    else:
+        if 0 < row < ARRAYSIZE - 1:
+            if 0 < col < ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == 0:
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+        elif row == 0:
+            if 0 < col < ARRAYSIZE - 1:
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == 0:
+                if table[row + 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == ARRAYSIZE - 1:
+                if table[row + 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row + 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+        elif row == ARRAYSIZE - 1:
+            if 0 < col < ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == 0:
+                if table[row - 1][col + 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row][col + 1] == 1:
+                    neighbors += 1
+            elif col == ARRAYSIZE - 1:
+                if table[row - 1][col - 1] == 1:
+                    neighbors += 1
+                if table[row - 1][col] == 1:
+                    neighbors += 1
+                if table[row][col - 1] == 1:
+                    neighbors += 1
 
     if (neighbors == 3 or neighbors == 2) and table[row][col] == 1:
         return True
@@ -203,7 +300,7 @@ def do_magic(table):
     return newTable
 
 
-board = np.zeros(ARRAYSIZE*ARRAYSIZE).reshape(ARRAYSIZE, ARRAYSIZE)
+board = np.zeros(ARRAYSIZE * ARRAYSIZE).reshape(ARRAYSIZE, ARRAYSIZE)
 
 onHold = True
 running = True
@@ -223,12 +320,12 @@ while running:
     for x in range(0, ARRAYSIZE):
         for y in range(0, ARRAYSIZE):
             if board[x][y] == 1:
-                pygame.draw.rect(screen, WHITE, (x*NODESIZE, y*NODESIZE, NODESIZE - 1, NODESIZE - 1))
+                pygame.draw.rect(screen, LiveColor, (x * NODESIZE, y * NODESIZE, NODESIZE - GRIDSIZE, NODESIZE - GRIDSIZE))
             else:
-                pygame.draw.rect(screen, GREY, (x*NODESIZE, y*NODESIZE, NODESIZE - 1, NODESIZE - 1))
+                pygame.draw.rect(screen, DeadColor, (x * NODESIZE, y * NODESIZE, NODESIZE - GRIDSIZE, NODESIZE - GRIDSIZE))
 
     if not onHold:
         board = do_magic(board)
-        sleep(0.1)
+        sleep(0.05)
 
     pygame.display.update()
